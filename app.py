@@ -22,7 +22,7 @@ def view_post(post_id):
     return flask.render_template("view_one.html", post=posts[post_id])
 
 @app.route("/")
-def view_posts():
+def index():
     return flask.render_template('view.html', posts=reversed(posts))
 
 @app.route("/about")
@@ -48,7 +48,7 @@ def new_post():
         "id": len(posts), # posts[post_id] == post
         "deleted": False,
     })
-    return flask.redirect(flask.url_for("view_posts"))
+    return flask.redirect(flask.url_for("index"))
 
 @app.route("/edit_post/<int:post_id>", methods=["GET", "POST"])
 @flask_login.login_required
@@ -79,4 +79,4 @@ def delete_post(post_id):
         return 'Unauthorized -- not the original author', 401
     post["deleted"] = True
     posts[post_id] = post
-    return flask.redirect(flask.url_for("view_posts"))
+    return flask.redirect(flask.url_for("index"))

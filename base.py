@@ -65,7 +65,7 @@ def user_loader(username): # Load user from a session
 @app.route("/login", methods=['GET', 'POST'])
 def login():
     if flask.request.method == "GET":
-        redirect = flask.request.args.get('redirect', '/')
+        redirect = flask.request.args.get('redirect', flask.url_for("index"))
         return flask.render_template('login.html', redirect=redirect)
     username = flask.request.form['username']
     password = flask.request.form['password']
@@ -74,7 +74,7 @@ def login():
         user = User.register(username, password)
     if user:
         flask_login.login_user(user)
-        then = flask.request.form.get('redirect', '/')
+        then = flask.request.form.get('redirect', flask.url_for("index"))
         # Hack-a-day! No safety here.
         #if not is_safe_url(then):
         #    return flask.abort(400)
@@ -86,7 +86,8 @@ def login():
 @app.route('/logout')
 def logout():
     flask_login.logout_user()
-    return flask.redirect("/")
+    redirect = flask.request.args.get('redirect', flask.url_for("index"))
+    return flask.redirect(redirect)
 
 @login_manager.unauthorized_handler
 def unauthorized_handler():
