@@ -1,3 +1,4 @@
+#!/bin/python3
 import flask, flask_login
 from datetime import datetime
 from base import app,DBList
@@ -11,25 +12,29 @@ app.config['APPLICATION_ROOT'] = info["subdir"]
 
 posts = DBList("posts")
 
+@app.context_processor
+def inject_dict_for_all_templates():
+    return info
+
 @app.route("/post/<int:post_id>")
 def view_post(post_id):
-    return flask.render_template("view_one.html", post=posts[post_id], **info)
+    return flask.render_template("view_one.html", post=posts[post_id])
 
 @app.route("/")
 def view_posts():
-    return flask.render_template('view.html', posts=reversed(posts), **info)
+    return flask.render_template('view.html', posts=reversed(posts))
 
 @app.route("/about")
 def about():
     with open("README", "r") as f:
         readme = f.read()
-    return flask.render_template('about.html', content=readme, **info)
+    return flask.render_template('about.html', content=readme)
 
 @app.route("/new_post", methods=["GET","POST"])
 @flask_login.login_required
 def new_post():
     if flask.request.method == "GET":
-        return flask.render_template("new.html", **info)
+        return flask.render_template("new.html")
     title = flask.request.form.get('title', '')
     content = flask.request.form.get('content', '')
     post_id = len(posts)
@@ -51,7 +56,7 @@ def edit_post(post_id):
     if flask_login.current_user.id != post["author"]:
         return 'Unauthorized -- not the original author', 401
     if flask.request.method == "GET":
-        return flask.render_template("edit.html", post=post, **info)
+        return flask.render_template("edit.html", post=post)
     title = flask.request.form.get('title', post["title"])
     content = flask.request.form.get('content', post["content"])
     posts[post_id] = {
@@ -74,6 +79,3 @@ def delete_post(post_id):
     post["deleted"] = True
     posts[post_id] = post
     return flask.redirect(flask.url_for("view_posts"))
-
-if __name__ == "__main__":
-    app.run(host='0.0.0.0')

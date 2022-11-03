@@ -66,7 +66,7 @@ def user_loader(username): # Load user from a session
 def login():
     if flask.request.method == "GET":
         redirect = flask.request.args.get('redirect', '/')
-        return f"<form action='login' method='POST'>\n    <input type='text' name='username' id='username' placeholder='email'/>\n    <input type='password' name='password' id='password' placeholder='password'/>\n    <input type='hidden' name='redirect' value='{redirect}'>\n    <input type='submit' name='submit'/>\n</form>"
+        return flask.render_template('login.html', redirect=redirect)
     username = flask.request.form['username']
     password = flask.request.form['password']
     user = User.get(username, password)
@@ -78,6 +78,7 @@ def login():
         # Hack-a-day! No safety here.
         #if not is_safe_url(then):
         #    return flask.abort(400)
+        print("logged in, visit", then, user, user.id)
         return flask.redirect(then)
 
     return 'Bad login'
