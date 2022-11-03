@@ -101,6 +101,7 @@ def dump():
     s+="\nDICTS = {}\n".format(repr(db_dicts))
     s+="LISTS = {}\n".format(repr(db_lists))
     for l in db_lists:
-        s+="{}=[\n{}\n]\n".format(d, "\n".join("  {}".format(repr(v)) for v in db))
+        db = DBList(l, debug=True)
+        s+="{}=[\n{}\n]\n".format(l, "\n".join("  {}".format(repr(v)) for v in db))
     s+="</pre>"
     return s
