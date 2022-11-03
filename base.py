@@ -35,8 +35,9 @@ class DBList():
         key = self.d["order"][key]
         self.d[key] = value
     def __iter__(self):
-        for key in self.d["order"]:
-            yield self.d[key]
+        return (self.d[key] for key in self.d["order"])
+    def __reversed__(self):
+        return (self.d[key] for key in reversed(self.d["order"]))
     
 users = DBDict("users")
 class User(flask_login.UserMixin):
@@ -93,15 +94,16 @@ def unauthorized_handler():
 def dump():
     global db_lists, db_dicts
     s = "<pre>"
-    s+="DICTS = {}\n".format(repr(db_dicts))
-    s+="LISTS = {}\n".format(repr(db_lists))
-    for d in (db_dicts | db_lists):
+    s+="DICTS = {}\n".format(repr(sorted(db_dicts)))
+    s+="LISTS = {}\n\n".format(repr(sorted(db_lists)))
+    for d in sorted(db_dicts):
         db = DBDict(d, debug=True)
         s+="{}={{\n{}\n}}\n".format(d, "\n".join("  {}: {}".format(repr(k),repr(v)) for k,v in db.items()))
-    s+="\nDICTS = {}\n".format(repr(db_dicts))
-    s+="LISTS = {}\n".format(repr(db_lists))
+    s += "\n\n"
     for l in db_lists:
         db = DBList(l, debug=True)
         s+="{}=[\n{}\n]\n".format(l, "\n".join("  {}".format(repr(v)) for v in db))
+        db = DBDict(l, debug=True)
+        s+="{}={{\n{}\n}}\n".format(l, "\n".join("  {}: {}".format(repr(k),repr(v)) for k,v in db.items()))
     s+="</pre>"
     return s

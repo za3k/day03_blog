@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block header %}
+    <h1>{% block title %}Edit post{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+<form method="post">
+Title: <input name="title" placeholder="untitled post" value="{{ post.title }}"/>
+<br>
+<textarea name="content" placeholder="content goes here">{{ post.content }}</textarea>
+<br>
+by {{current_user.id}}
+<br>
+<input type="submit" name="submit" value="Submit Post">
+</form>
+{% endblock %}
