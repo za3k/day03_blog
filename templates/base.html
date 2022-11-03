@@ -1,0 +1,37 @@
+<!doctype html>
+<title>{% block title %}{% endblock %} - {{ project_name }}</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.css') }}">
+<!--<link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">-->
+<link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap-theme.min.css') }}">
+<div class="container">
+<nav class="navbar navbar-default">
+    <div class="container-fluid">
+    <div class="navbar-header">{{ project_name }}</div>
+    <div class="navbar">
+    <ul class="nav navbar-nav">
+        {% if current_user.is_authenticated %}
+            <li><a href="{{ url_for('new_post') }}">New Post</a>
+        {% endif %}
+    </ul>
+    <ul class="nav navbar-nav navbar-right">
+        {% if current_user.is_authenticated %}
+            <li><a href="{{ url_for('logout') }}">Log Out ({{ current_user.id }})</a>
+        {% else %}
+            <li><a href="{{ url_for('login') }}">Log In / Register</a>
+        {% endif %}
+    </ul>
+    </div>
+    </div>
+</nav>
+<section class="content">
+    <header>
+        {% block header %}{% endblock %}
+    </header>
+    {% block content %}{% endblock %}
+</section>
+<ul id="footer">
+    <li>{{ project_name }} is part of <a href="https://za3k.com/hack_a_day">Hack-A-Day</a>, a project to write one new project a day in November.</li>
+    <li>Source code is available at <a href="{{ source_url }}">{{ source_url }}</a></li>
+</ul>
+</div>

@@ -1,0 +1,106 @@
+import flask, flask_login
+from sqlitedict import SqliteDict
+
+app = flask.Flask(__name__)
+app.secret_key = "quadruped effulgence fates cutaway monophonic" # Hack-a-day! Check it in to source.
+login_manager = flask_login.LoginManager()
+login_manager.init_app(app)
+
+db_lists = set()
+db_dicts = set()
+def DBDict(name, is_list=False, debug=False):
+    if not (is_list or debug):
+        global dicts
+        db_dicts.add(name)
+    return SqliteDict("app.sqlite",tablename=name,autocommit=True)
+class DBList():
+    def __init__(self, name, debug=False):
+        if not debug:
+            global db_lists
+            db_lists.add(name)
+        self.d = DBDict(name, is_list=True)
+        if "order" not in self.d:
+            self.d["order"] = []
+    def append(self, x):
+        import time
+        key = str(int(time.time())) # Good enough for hack-a-day
+        self.d[key] = x
+        self.d["order"] = self.d["order"] + [key]
+    def __len__(self):
+        return len(self.d["order"])
+    def __getitem__(self, key):
+        key = self.d["order"][key]
+        return self.d[key]
+    def __setitem__(self, key, value):
+        key = self.d["order"][key]
+        self.d[key] = value
+    def __iter__(self):
+        for key in self.d["order"]:
+            yield self.d[key]
+    
+users = DBDict("users")
+class User(flask_login.UserMixin):
+    def get(username, password=None):
+        if username == '' or username not in users:
+            return
+        if password is not None and users[username]['password'] != password:
+            return
+        user = User()
+        user.id = username
+        return user
+    def register(username, password):
+        if username in users:
+            if password == users[username]['password']:
+                return user
+            return None
+        users[username]={'password': password}
+        return User.get(username, password)
+
+@login_manager.user_loader
+def user_loader(username): # Load user from a session
+    return User.get(username)
+
+@app.route("/login", methods=['GET', 'POST'])
+def login():
+    if flask.request.method == "GET":
+        redirect = flask.request.args.get('redirect', '/')
+        return f"<form action='login' method='POST'>\n    <input type='text' name='username' id='username' placeholder='email'/>\n    <input type='password' name='password' id='password' placeholder='password'/>\n    <input type='hidden' name='redirect' value='{redirect}'>\n    <input type='submit' name='submit'/>\n</form>"
+    username = flask.request.form['username']
+    password = flask.request.form['password']
+    user = User.get(username, password)
+    if not user: # Hack-a-day! Combine registration and login
+        user = User.register(username, password)
+    if user:
+        flask_login.login_user(user)
+        then = flask.request.form.get('redirect', '/')
+        # Hack-a-day! No safety here.
+        #if not is_safe_url(then):
+        #    return flask.abort(400)
+        return flask.redirect(then)
+
+    return 'Bad login'
+
+@app.route('/logout')
+def logout():
+    flask_login.logout_user()
+    return flask.redirect("/")
+
+@login_manager.unauthorized_handler
+def unauthorized_handler():
+    return 'Unauthorized', 401
+
+@app.route("/dump")
+def dump():
+    global db_lists, db_dicts
+    s = "<pre>"
+    s+="DICTS = {}\n".format(repr(db_dicts))
+    s+="LISTS = {}\n".format(repr(db_lists))
+    for d in (db_dicts | db_lists):
+        db = DBDict(d, debug=True)
+        s+="{}={{\n{}\n}}\n".format(d, "\n".join("  {}: {}".format(repr(k),repr(v)) for k,v in db.items()))
+    s+="\nDICTS = {}\n".format(repr(db_dicts))
+    s+="LISTS = {}\n".format(repr(db_lists))
+    for l in db_lists:
+        s+="{}=[\n{}\n]\n".format(d, "\n".join("  {}".format(repr(v)) for v in db))
+    s+="</pre>"
+    return s
