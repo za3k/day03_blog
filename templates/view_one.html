@@ -1,19 +1,10 @@
 {% extends 'base.html' %}
-
-{% macro display_post(post) -%}
-    {% if post.author == current_user.id %}
-    <a href="{{ url_for("edit_post", post_id=post.id) }}">Edit</a>
-    <br>
-    {% endif %}
-    by {{ post.author }}, <span class="date">{{ post.creation_time.strftime("%Y-%m-%d %H:%M") }}</span>
-    {% if post.creation_time.strftime("%Y%m%d%H%M") != post.edit_time.strftime("%Y%m%d%H%M") %}(edited <span class="date">{{ post.edit_time.strftime("%Y-%m-%d %H:%M") }}</span>){% endif %}
-    <p>{{ post.content }}</p>
-{%- endmacro %}
+{% import 'common.html' as common %}
 
 {% block header %}
     <h1>{% block title %}{{ post.title }}{% endblock %}</h1>
 {% endblock %}
 
 {% block content %}
-{{ display_post(post) }}
+{{ common.display_post(post, current_user) }}
 {% endblock %}

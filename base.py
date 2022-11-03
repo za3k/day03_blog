@@ -103,7 +103,7 @@ def dump():
     for l in db_lists:
         db = DBList(l, debug=True)
         s+="{}=[\n{}\n]\n".format(l, "\n".join("  {}".format(repr(v)) for v in db))
-        db = DBDict(l, debug=True)
-        s+="{}={{\n{}\n}}\n".format(l, "\n".join("  {}: {}".format(repr(k),repr(v)) for k,v in db.items()))
+        #db = DBDict(l, debug=True)
+        #s+="{}={{\n{}\n}}\n".format(l, "\n".join("  {}: {}".format(repr(k),repr(v)) for k,v in db.items()))
     s+="</pre>"
     return s
