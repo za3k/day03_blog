@@ -7,3 +7,6 @@ This is a multi-user blog. Anyone can register and post to the blog. Registratio
 This was the simplest CRUD application I could think of. I wanted to get the basics (serving web pages, databases, login) etc done in one project. That way, tomorrow I can do something more complex, and copy what I have today.
 
 Feel free to use it for anything!
+
+Demo available at: https://tilde.za3k.com/hackaday/blog
+
