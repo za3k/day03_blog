@@ -1,18 +1,14 @@
 #!/bin/python3
 import flask, flask_login
 from datetime import datetime
-from base import app,DBList
+from base import app,DBList,load_info
 
 # -- Info for every Hack-A-Day project --
-info = {
+load_info({
     "project_name": "Hack-A-Blog",
     "source_url": "https://github.com/za3k/day03_blog",
     "subdir": "/hackaday/blog"
-}
-@app.context_processor
-def inject_dict_for_all_templates():
-    return info
-
+})
 
 # -- Routes specific to this Hack-A-Day project --
 posts = DBList("posts")

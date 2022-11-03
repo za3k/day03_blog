@@ -110,3 +110,13 @@ def dump():
         #s+="{}={{\n{}\n}}\n".format(l, "\n".join("  {}: {}".format(repr(k),repr(v)) for k,v in db.items()))
     s+="</pre>"
     return s
+
+info={}
+def load_info(new_info):
+    global info
+    info=new_info
+    if not app.config["DEBUG"]:
+        app.config["APPLICATION_ROOT"]=info["subdir"]
+@app.context_processor
+def inject_dict_for_all_templates():
+    return info
