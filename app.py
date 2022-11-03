@@ -71,3 +71,6 @@ def delete_post(post_id):
     post["deleted"] = True
     posts[post_id] = post
     return flask.redirect(flask.url_for("view_posts"))
+
+if __name__ == "__main__":
+    app.run(host='0.0.0.0')
