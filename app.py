@@ -2,11 +2,14 @@ import flask, flask_login
 from datetime import datetime
 from base import app,DBList
 
-posts = DBList("posts")
 info = {
     "project_name": "Hack-A-Blog",
     "source_url": "https://github.com/za3k/day03_blog",
+    "subdir": "/hackaday/blog"
 }
+app.config['APPLICATION_ROOT'] = info["subdir"]
+
+posts = DBList("posts")
 
 @app.route("/post/<int:post_id>")
 def view_post(post_id):

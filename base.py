@@ -2,6 +2,7 @@ import flask, flask_login
 from sqlitedict import SqliteDict
 
 app = flask.Flask(__name__)
+
 app.secret_key = "quadruped effulgence fates cutaway monophonic" # Hack-a-day! Check it in to source.
 login_manager = flask_login.LoginManager()
 login_manager.init_app(app)
