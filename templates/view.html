@@ -3,15 +3,17 @@
 
 {% block header %}
     <h1>{% block title %}Blog{% endblock %}</h1>
-    This is a demo. Feel free to try me out!
+    This is a demo. Feel free to try me out using the links in the header.
 {% endblock %}
 
 {% block content %}
 {% for post in posts %}
 {% if not post.deleted %}
-    <h3><a href="{{ url_for("view_post", post_id=post.id) }}">{{ post.title }}</a></h3>
-    {{ common.display_post(post, current_user) }}
-    <hr>
+    <div class="post">
+    {{ common.display_post(post, current_user, True) }}
+    {% if not loop.last %}
+    </div>
+    {% endif %}
 {% endif %}
 {% endfor %}
 {% endblock %}

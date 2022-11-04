@@ -7,8 +7,7 @@
 <div class="container">
 <nav class="navbar navbar-default">
     <div class="container-fluid">
-    <div class="navbar-header">{{ project_name }}</div>
-    <div class="navbar">
+    <div class="navbar-brand navbar-brand-link"><a href="{{ url_for('index') }}">{{ project_name }}</a></div>
     <ul class="nav navbar-nav">
         <li><a href="{{ url_for('index') }}">Blog</a>
         {% if current_user.is_authenticated %}
@@ -24,7 +23,6 @@
         {% endif %}
     </ul>
     </div>
-    </div>
 </nav>
 <section class="content">
     <header>
@@ -32,8 +30,7 @@
     </header>
     {% block content %}{% endblock %}
 </section>
-<hr>
-<div id="footer">
+<footer class="footer bg-light">
     <ul>
         <li>{{ project_name }} is part of <a href="https://za3k.com/hack_a_day">Hack-A-Day</a>, a project to write one new project a day in November.</li>
         <li>Source code is available on <a href="{{ source_url }}">github</a></li>

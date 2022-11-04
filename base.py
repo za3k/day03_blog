@@ -78,7 +78,6 @@ def login():
         # Hack-a-day! No safety here.
         #if not is_safe_url(then):
         #    return flask.abort(400)
-        print("logged in, visit", then, user, user.id)
         return flask.redirect(then)
 
     return 'Bad login'

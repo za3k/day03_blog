@@ -6,12 +6,19 @@
 
 {% block content %}
 <form method="post">
-Title: <input name="title" placeholder="untitled post" value="{{ post.title }}"/>
-<br>
-<textarea name="content" placeholder="content goes here">{{ post.content }}</textarea>
-<br>
-by {{current_user.id}}
-<br>
-<input type="submit" name="submit" value="Submit Post">
+    <div class="form-group">
+        <label for="title">Title</label>
+        <input class="form-control" name="title" id="label" placeholder="untitled post" value="{{ post.title }}"/>
+    </div>
+    <div class="form-group">
+        <label for="author">Author</label>
+        <span id="author">{{ post.author }}</span>
+    </div>
+    <div class="form-group">
+        <label for="content">Blog post</label>
+        <textarea class="form-control blog-edit" name="content" placeholder="type blog post here">{{ post.content }}</textarea>
+    </div>
+</form>
+<input class="btn btn-primary" type="submit" name="submit" value="Submit Post">
 </form>
 {% endblock %}
