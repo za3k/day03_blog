@@ -23,7 +23,7 @@ def index():
 
 @app.route("/about")
 def about():
-    with open("README", "r") as f:
+    with open("README.md", "r") as f:
         readme = f.read()
     return flask.render_template('about.html', content=readme)
 
